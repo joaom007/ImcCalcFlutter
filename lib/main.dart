@@ -18,6 +18,8 @@ class _HomeState extends State<Home> {
 
   String _textoInfo = "Informe seus dados";
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   void _limparCampos() {
     pesoController.text = "";
     alturaController.text = "";
@@ -64,54 +66,71 @@ class _HomeState extends State<Home> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Icon(
-              Icons.person_outline,
-              size: 120.0,
-              color: Colors.blue,
-            ),
-            TextField(
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Peso (KG)",
-                labelStyle: TextStyle(color: Colors.green),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Icon(
+                Icons.person_outline,
+                size: 120.0,
+                color: Colors.blue,
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 25.0),
-              controller: pesoController,
-            ),
-            TextField(
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Altura (cm)",
-                labelStyle: TextStyle(color: Colors.green),
-              ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 25.0),
-              controller: alturaController,
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              height: 50.0,
-              // ignore: deprecated_member_use
-              child: RaisedButton(
-                //Decorated button nova versão
-                onPressed: _calcularImc,
-                child: Text(
-                  "Calcular",
-                  style: TextStyle(fontSize: 25.0, color: Colors.white),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Peso (KG)",
+                  labelStyle: TextStyle(color: Colors.green),
                 ),
-                color: Colors.green,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 25.0),
+                controller: pesoController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Por favor preencha o campo peso";
+                  }
+                },
               ),
-            ),
-            Text(
-              _textoInfo,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.green, fontSize: 25.0),
-            ),
-          ],
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Altura (cm)",
+                  labelStyle: TextStyle(color: Colors.green),
+                ),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 25.0),
+                controller: alturaController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Por favor preencha o campo altura";
+                  }
+                },
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                height: 50.0,
+                // ignore: deprecated_member_use
+                child: RaisedButton(
+                  //Decorated button nova versão
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      _calcularImc();
+                    }
+                  },
+                  child: Text(
+                    "Calcular",
+                    style: TextStyle(fontSize: 25.0, color: Colors.white),
+                  ),
+                  color: Colors.green,
+                ),
+              ),
+              Text(
+                _textoInfo,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.green, fontSize: 25.0),
+              ),
+            ],
+          ),
         ),
       ),
     ); // Scaffold
